@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud Network Performance Analyzer</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f2f5f9;margin:0;padding:20px;color:#222}
+  h1{text-align:center;font-size:24px}
+  .card{background:#fff;max-width:600px;margin:15px auto;padding:20px;border-radius:10px;box-shadow:0 2px 6px #0002}
+  button{padding:10px 20px;font-size:16px;background:#1a73e8;color:#fff;border:0;border-radius:6px;cursor:pointer}
+  table{width:100%;border-collapse:collapse}
+  td{padding:8px;border-bottom:1px solid #ddd}
+  .bar{background:#1a73e8;color:#fff;margin:4px 0;padding:4px 8px;border-radius:4px;font-size:13px;white-space:nowrap}
+</style>
+</head>
+<body>
+<h1>Cloud Network Performance Analyzer</h1>
+
+<div class="card">
+  <p><b>Name:</b> NEHA VAGHELA | <b>Enrollment No: 250213107010 </b> YOUR ROLL NO</p>
+  <table>
+    <tr><td>Status</td><td id="status"></td></tr>
+    <tr><td>Protocol</td><td id="proto"></td></tr>
+    <tr><td>Hostname</td><td id="host"></td></tr>
+    <tr><td>Connection type</td><td id="ctype"></td></tr>
+    <tr><td>Page load time</td><td id="load">measuring...</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <button onclick="runTest()">Run Latency Test (10 requests)</button>
+  <p id="result"></p>
+  <div id="bars"></div>
+</div>
+
+<script>
+// Show connection details
+document.getElementById("status").innerText = navigator.onLine ? "Online" : "Offline";
+document.getElementById("proto").innerText = location.protocol;
+document.getElementById("host").innerText = location.hostname;
+const c = navigator.connection;
+document.getElementById("ctype").innerText = c
+  ? c.effectiveType + ", downlink " + c.downlink + " Mbps"
+  : "Not supported by this browser";
+
+// Page load time
+window.addEventListener("load", function () {
+  setTimeout(function () {
+    const n = performance.getEntriesByType("navigation")[0];
+    document.getElementById("load").innerText = Math.round(n.loadEventEnd) + " ms";
+  }, 0);
+});
+
+// Latency test: send 10 requests to the cloud server and time each one
+async function runTest() {
+  const times = [];
+  const bars = document.getElementById("bars");
+  bars.innerHTML = "";
+  document.getElementById("result").innerText = "Testing...";
+
+  for (let i = 1; i <= 10; i++) {
+    const start = performance.now();
+    try {
+      await fetch(location.href + "?t=" + Date.now(), { cache: "no-store" });
+    } catch (e) {}
+    const ms = Math.round(performance.now() - start);
+    times.push(ms);
+    const w = Math.max(25, Math.min(ms / 2, 100));
+    bars.innerHTML += '<div class="bar" style="width:' + w + '%">Request ' + i + ': ' + ms + ' ms</div>';
+  }
+
+  const min = Math.min(...times);
+  const max = Math.max(...times);
+  const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
+  document.getElementById("result").innerHTML =
+    "<b>Min:</b> " + min + " ms | <b>Avg:</b> " + avg + " ms | <b>Max:</b> " + max +
+    " ms | <b>Jitter:</b> " + (max - min) + " ms";
+}
+</script>
+</body>
+</html>
