@@ -6,170 +6,225 @@
 <title>Cloud Network Performance Analyzer</title>
 <style>
   :root {
-    --bg: #f8fafc;
-    --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --bar-bg: #3b82f6;
-    --badge-bg: #eff6ff;
+    --bg-surface: #edf2f7;
+    --card-surface: #ffffff;
+    --accent: #0284c7;
+    --accent-hover: #0369a1;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-    background: var(--bg);
-    margin: 0;
-    padding: 36px 16px;
-    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-surface);
+    color: var(--text-main);
+    padding: 30px 14px;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1 {
+  .header {
     text-align: center;
-    font-size: 1.5rem;
+    margin-bottom: 22px;
+  }
+
+  .header h1 {
+    font-size: 1.45rem;
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
-    margin-bottom: 24px;
+    color: #0f172a;
+  }
+
+  .header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
   }
 
   .card {
-    background: var(--card-bg);
+    background: var(--card-surface);
     max-width: 580px;
-    margin: 16px auto;
-    padding: 24px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    margin: 14px auto;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
   }
 
-  .meta-info {
-    margin: 0 0 16px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+  .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .meta-info b {
-    color: var(--text-primary);
+  .card-header b {
+    color: var(--text-main);
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.92rem;
+  .card-body {
+    padding: 18px;
   }
 
-  td {
-    padding: 10px 4px;
-    border-bottom: 1px solid #f1f5f9;
+  /* List Metrics */
+  .metric-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  tr:last-child td {
-    border-bottom: none;
+  .metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #edf2f7;
+    font-size: 0.88rem;
   }
 
-  td:first-child {
-    color: var(--text-secondary);
+  .metric-label {
+    color: var(--text-muted);
     font-weight: 500;
   }
 
-  td:last-child {
-    text-align: right;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: var(--text-primary);
+  .metric-val {
+    font-family: "SF Mono", Consolas, Menlo, monospace;
+    font-weight: 600;
+    color: var(--text-main);
+    background: #ffffff;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.82rem;
   }
 
+  /* Button & Trigger */
   button {
     width: 100%;
-    padding: 12px 18px;
-    font-size: 0.95rem;
+    padding: 12px;
+    font-size: 0.92rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
     background: var(--accent);
-    color: #ffffff;
+    color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.05s ease;
+    box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25);
+    transition: background 0.15s ease, box-shadow 0.15s ease;
   }
 
   button:hover {
     background: var(--accent-hover);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
   }
 
-  button:active {
-    transform: scale(0.99);
-  }
-
-  #result {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+  /* Stats Summary Strip */
+  #result:not(:empty) {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 10px 14px;
+    border-radius: 8px;
     margin: 16px 0 12px;
-    line-height: 1.5;
+    font-size: 0.82rem;
+    font-family: "SF Mono", Consolas, monospace;
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
-  #result b {
-    color: var(--text-primary);
-  }
-
+  /* Chart Progress Bars */
   #bars {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    margin-top: 10px;
   }
 
   .bar {
-    background: linear-gradient(90deg, var(--bar-bg), #60a5fa);
-    color: #ffffff;
-    padding: 6px 10px;
+    background: #0284c7;
+    color: #fff;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: 0.8rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.78rem;
+    font-family: "SF Mono", Consolas, monospace;
     font-weight: 500;
     white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15);
-    transition: width 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: width 0.25s ease;
   }
 </style>
 </head>
 <body>
 
-<h1>Cloud Network Performance Analyzer</h1>
-
-<div class="card">
-  <p class="meta-info"><b>Name:</b> NEHA VAGHELA &bull; <b>Enrollment:</b> 250213107010</p>
-  <table>
-    <tr><td>Status</td><td id="status"></td></tr>
-    <tr><td>Protocol</td><td id="proto"></td></tr>
-    <tr><td>Hostname</td><td id="host"></td></tr>
-    <tr><td>Connection type</td><td id="ctype"></td></tr>
-    <tr><td>Page load time</td><td id="load">measuring...</td></tr>
-  </table>
+<div class="header">
+  <h1>Cloud Network Performance Analyzer</h1>
+  <p>Real-time Client Telemetry &amp; Round-Trip Latency Monitor</p>
 </div>
 
+<!-- Card 1: System Info -->
 <div class="card">
-  <button onclick="runTest()">Run Latency Test (10 requests)</button>
-  <p id="result"></p>
-  <div id="bars"></div>
+  <div class="card-header">
+    <span><b>Name:</b> NEHA VAGHELA</span>
+    <span><b>Enrollment:</b> 250213107010</span>
+  </div>
+  <div class="card-body">
+    <div class="metric-list">
+      <div class="metric-item">
+        <span class="metric-label">Status</span>
+        <span class="metric-val" id="status"></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Protocol</span>
+        <span class="metric-val" id="proto"></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Hostname</span>
+        <span class="metric-val" id="host"></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Connection Type</span>
+        <span class="metric-val" id="ctype"></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Page Load Time</span>
+        <span class="metric-val" id="load">measuring...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card 2: Interactive Latency Test -->
+<div class="card">
+  <div class="card-body">
+    <button onclick="runTest()">Run Latency Test (10 requests)</button>
+    <div id="result"></div>
+    <div id="bars"></div>
+  </div>
 </div>
 
 <script>
 // Show connection details
-document.getElementById("status").innerText = navigator.onLine ? "Online" : "Offline";
-document.getElementById("proto").innerText = location.protocol;
-document.getElementById("host").innerText = location.hostname;
+document.getElementById("status").innerText = navigator.onLine ? "ONLINE" : "OFFLINE";
+document.getElementById("proto").innerText = location.protocol.replace(":", "");
+document.getElementById("host").innerText = location.hostname || "localhost";
 const c = navigator.connection;
 document.getElementById("ctype").innerText = c
-  ? c.effectiveType + ", downlink " + c.downlink + " Mbps"
-  : "Not supported by this browser";
+  ? `${c.effectiveType} (${c.downlink} Mbps)`
+  : "Not supported";
 
 // Page load time
 window.addEventListener("load", function () {
@@ -179,12 +234,13 @@ window.addEventListener("load", function () {
   }, 0);
 });
 
-// Latency test: send 10 requests to the cloud server and time each one
+// Latency test
 async function runTest() {
   const times = [];
   const bars = document.getElementById("bars");
+  const res = document.getElementById("result");
   bars.innerHTML = "";
-  document.getElementById("result").innerText = "Testing...";
+  res.innerText = "Running diagnostic test...";
 
   for (let i = 1; i <= 10; i++) {
     const start = performance.now();
@@ -193,16 +249,25 @@ async function runTest() {
     } catch (e) {}
     const ms = Math.round(performance.now() - start);
     times.push(ms);
-    const w = Math.max(25, Math.min(ms / 2, 100));
-    bars.innerHTML += '<div class="bar" style="width:' + w + '%">Request ' + i + ': ' + ms + ' ms</div>';
+    const w = Math.max(28, Math.min(ms / 2, 100));
+    bars.innerHTML += `
+      <div class="bar" style="width:${w}%">
+        <span>Request #${i}</span>
+        <span>${ms} ms</span>
+      </div>`;
   }
 
   const min = Math.min(...times);
   const max = Math.max(...times);
   const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
-  document.getElementById("result").innerHTML =
-    "<b>Min:</b> " + min + " ms | <b>Avg:</b> " + avg + " ms | <b>Max:</b> " + max +
-    " ms | <b>Jitter:</b> " + (max - min) + " ms";
+  const jitter = max - min;
+
+  res.innerHTML = `
+    <span><b>Min:</b> ${min}ms</span>
+    <span><b>Avg:</b> ${avg}ms</span>
+    <span><b>Max:</b> ${max}ms</span>
+    <span><b>Jitter:</b> ${jitter}ms</span>
+  `;
 }
 </script>
 </body>
